@@ -10,11 +10,6 @@ public class ApplicationRunner {
 
     private AuctionSniperDriver driver;
 
-    public static void main(String[] args) {
-        ApplicationRunner runner = new ApplicationRunner();
-        runner.startBiddingIn(new FakeAuctionServer("54321"));
-    }
-
     public void startBiddingIn(final FakeAuctionServer auction) {
 
         Thread thread = new Thread("Test Application") {
@@ -44,6 +39,5 @@ public class ApplicationRunner {
         if (driver != null) {
             driver.dispose();
         }
-
     }
 }

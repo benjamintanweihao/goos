@@ -38,6 +38,7 @@ public class FakeAuctionServer {
 
         connection.getChatManager().addChatListener((chat, createdLocally) -> {
             currentChat = chat;
+            chat.addMessageListener(messageListener);
         });
     }
 

@@ -1,12 +1,12 @@
 package io.benjamintan.goos;
 
 public class ApplicationRunner {
-    public static final String SNIPER_ID       = "sniper";
+    public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
-    public static final String XMPP_HOSTNAME   = "localhost";
+    public static final String XMPP_HOSTNAME = "localhost";
 
-    public static final String STATUS_JOINING  = "joining";
-    public static final String STATUS_LOST     = "lost";
+    public static final String STATUS_JOINING = "joining";
+    public static final String STATUS_LOST = "lost";
 
     private AuctionSniperDriver driver;
 

@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compile 'jivesoftware:smack:3.1.0'
+    compile 'jivesoftware:smackx:3.1.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile 'org.hamcrest:hamcrest-all:1.3'

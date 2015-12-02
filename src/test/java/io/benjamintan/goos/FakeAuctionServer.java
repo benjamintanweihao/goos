@@ -17,7 +17,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class FakeAuctionServer {
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_RESOURCE = "Auction";
-    public static final String XMPP_HOSTNAME    = "localhost";
+    public static final String XMPP_HOSTNAME = "localhost";
     public static final String AUCTION_PASSWORD = "auction";
 
     private final String itemId;
@@ -37,7 +37,7 @@ public class FakeAuctionServer {
             AUCTION_PASSWORD, AUCTION_RESOURCE);
 
         connection.getChatManager().addChatListener((chat, createdLocally) -> {
-           currentChat = chat;
+            currentChat = chat;
         });
     }
 

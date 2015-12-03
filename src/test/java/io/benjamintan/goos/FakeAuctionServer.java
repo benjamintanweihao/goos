@@ -37,16 +37,12 @@ public class FakeAuctionServer {
     public void startSellingItem() throws XMPPException {
         connection.connect();
         connection.login(format(ITEM_ID_AS_LOGIN, itemId),
-            AUCTION_PASSWORD, AUCTION_RESOURCE);
+                AUCTION_PASSWORD, AUCTION_RESOURCE);
 
         connection.getChatManager().addChatListener((chat, createdLocally) -> {
             currentChat = chat;
             chat.addMessageListener(messageListener);
         });
-    }
-
-    public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage(Matchers.equalTo(String.format("SOLVersion 1.1; Command: BID; Price: %d;", bid)));
     }
 
     public void announceClosed() throws XMPPException {
@@ -63,17 +59,23 @@ public class FakeAuctionServer {
 
     public void reportPrice(int price, int increment, String bidder) throws XMPPException {
         currentChat.sendMessage(
-            String.format("SOLVersion: 1.1; Event: PRICE; "
-                    + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
-                    price, increment, bidder)
+                String.format("SOLVersion: 1.1; Event: PRICE; "
+                                + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                        price, increment, bidder)
         );
     }
 
+    public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT));
+    }
+
     public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
-        assertThat(currentChat.getParticipant(), equalTo(sniperId));
-        messageListener.receivesAMessage(
-           Matchers.equalTo(
-               String.format("SOLVersion 1.1; Command: BID; Price: %d;", bid)));
+        receivesAMessageMatching(sniperId, equalTo(format(Main.BID_COMMAND_FORMAT, bid)));
+    }
+
+    private void receivesAMessageMatching(String sniperId, Matcher<String> messageMatcher) throws InterruptedException {
+        messageListener.receivesAMessage(messageMatcher);
+        assertThat(currentChat.getParticipant(), Matchers.equalTo(sniperId));
     }
 
     public class SingleMessageListener implements MessageListener {

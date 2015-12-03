@@ -5,15 +5,15 @@ import org.junit.Test;
 
 public class AuctionSniperEndToEndTest {
     private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
-    private final ApplicationRunner applicationRunner = new ApplicationRunner();
+    private final ApplicationRunner application = new ApplicationRunner();
 
     @Test
     public void sniperJoinsAuctionUntilAuctionCloses() throws Exception {
         auction.startSellingItem();
-        applicationRunner.startBiddingIn(auction);
+        application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFromSniper();
         auction.announceClosed();
-        applicationRunner.showSniperHasLostAuction();
+        application.showSniperHasLostAuction();
     }
 
     @After
@@ -23,6 +23,6 @@ public class AuctionSniperEndToEndTest {
 
     @After
     public void stopApplication() {
-        applicationRunner.stop();
+        application.stop();
     }
 }

@@ -8,7 +8,7 @@ public class ApplicationRunner {
     public static final String STATUS_JOINING = "joining";
     public static final String STATUS_LOST = "lost";
     public static final String STATUS_BIDDING = "bidding";
-    public static final String SNIPER_XMPP_ID = "sniper@localhost/Auction";
+    public static final String SNIPER_XMPP_ID = "sniper@localhost/Smack";
 
     private AuctionSniperDriver driver;
 

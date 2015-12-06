@@ -10,7 +10,9 @@ public class MainWindow extends JFrame {
     public static final String SNIPER_STATUS_NAME = "sniper status";
     public static final String STATUS_JOINING = "joining";
     public static final String STATUS_LOST = "lost";
-    public static String STATUS_BIDDING = "bidding";
+    public static final String STATUS_BIDDING = "bidding";
+    public static final String STATUS_WINNING = "winning";
+    public static final String STATUS_WON = "won";
 
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
@@ -19,7 +21,7 @@ public class MainWindow extends JFrame {
         setName(MAIN_WINDOW_NAME);
         add(sniperStatus);
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -31,6 +33,6 @@ public class MainWindow extends JFrame {
     }
 
     public void showStatus(String status) {
-       sniperStatus.setText(status);
+        sniperStatus.setText(status);
     }
 }

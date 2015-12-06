@@ -7,10 +7,15 @@ import org.jivesoftware.smack.packet.Message;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.benjamintan.goos.AuctionEventListener.*;
+import static io.benjamintan.goos.AuctionEventListener.PriceSource.*;
+
 public class AuctionMessageTranslator implements MessageListener {
     private AuctionEventListener listener;
+    private final String sniperId;
 
-    public AuctionMessageTranslator(AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+        this.sniperId = sniperId;
         this.listener = listener;
     }
 
@@ -22,17 +27,8 @@ public class AuctionMessageTranslator implements MessageListener {
         if ("CLOSE".equals(type)) {
             listener.auctionClosed();
         } else if ("PRICE".equals(type)) {
-            listener.currentPrice(event.currentPrice(), event.increment());
+            listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
         }
-    }
-
-    private HashMap<String, String> unpackEventFrom(Message message) {
-        HashMap<String, String> event = new HashMap<>();
-        for (String element : message.getBody().split(";")) {
-            String[] pair = element.split(":");
-            event.put(pair[0].trim(), pair[1].trim());
-        }
-        return event;
     }
 
     private static class AuctionEvent {
@@ -69,6 +65,10 @@ public class AuctionMessageTranslator implements MessageListener {
             return messageBody.split(";");
         }
 
+        public PriceSource isFrom(String sniperId) {
+            return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
+        }
+
         private String get(String fieldName) {
             return fields.get(fieldName);
         }
@@ -77,6 +77,8 @@ public class AuctionMessageTranslator implements MessageListener {
             return Integer.parseInt(get(fieldName));
         }
 
-
+        private String bidder() {
+            return get("Bidder");
+        }
     }
 }

@@ -24,10 +24,11 @@ public class XMPPAuction implements Auction {
 
     @Override
     public void join() {
-        sendMessage(format(JOIN_COMMAND_FORMAT));
+        sendMessage(JOIN_COMMAND_FORMAT);
     }
 
     private void sendMessage(final String message) {
+
         try {
             chat.sendMessage(message);
         } catch (XMPPException e) {

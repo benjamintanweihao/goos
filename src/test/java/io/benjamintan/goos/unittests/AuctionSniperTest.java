@@ -2,8 +2,8 @@ package io.benjamintan.goos.unittests;
 
 import io.benjamintan.goos.Auction;
 import io.benjamintan.goos.AuctionSniper;
-import io.benjamintan.goos.Main;
 import io.benjamintan.goos.SniperListener;
+import io.benjamintan.goos.SniperState;
 import org.junit.Test;
 
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromOtherBidder;
@@ -12,15 +12,17 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class AuctionSniperTest {
+    private static final String ITEM_ID = "item-54321";
     private final Auction auction = mock(Auction.class);
     private final SniperListener sniperListenerSpy = spy(new SniperListenerStub());
-    private final AuctionSniper sniper = new AuctionSniper(auction, sniperListenerSpy);
+    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListenerSpy);
 
-    private enum SniperState {
+
+    private enum SniperStateForTests {
         idle, winning, bidding
     }
 
-    private SniperState sniperState = SniperState.idle;
+    private SniperStateForTests sniperStateForTests = SniperStateForTests.idle;
 
     @Test
     public void reportsLostIfAuctionClosesImmediately() {
@@ -35,18 +37,21 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
 
         verify(sniperListenerSpy, times(1)).sniperLost();
-        assertEquals(SniperState.bidding, sniperState);
+        assertEquals(SniperStateForTests.bidding, sniperStateForTests);
     }
 
     @Test
     public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
+        final int bid = price + increment;
 
         sniper.currentPrice(price, increment, FromOtherBidder);
 
-        verify(auction, times(1)).bid(price + increment);
-        verify(sniperListenerSpy, atLeastOnce()).sniperBidding();
+        verify(auction, times(1)).bid(bid);
+        verify(sniperListenerSpy, atLeastOnce()).sniperBidding(
+               new SniperState(ITEM_ID, price, bid)
+        );
     }
 
     @Test
@@ -54,7 +59,7 @@ public class AuctionSniperTest {
         sniper.currentPrice(123, 45, FromSniper);
 
         verify(sniperListenerSpy, atLeastOnce()).sniperWinning();
-        assertEquals(SniperState.winning, sniperState);
+        assertEquals(SniperStateForTests.winning, sniperStateForTests);
     }
 
     @Test
@@ -63,7 +68,7 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
 
         verify(sniperListenerSpy, atLeastOnce()).sniperWon();
-        assertEquals(SniperState.winning, sniperState);
+        assertEquals(SniperStateForTests.winning, sniperStateForTests);
     }
 
     private class SniperListenerStub implements SniperListener {
@@ -72,13 +77,13 @@ public class AuctionSniperTest {
         }
 
         @Override
-        public void sniperBidding() {
-            sniperState = SniperState.bidding;
+        public void sniperBidding(SniperState sniperState) {
+            sniperStateForTests = SniperStateForTests.bidding;
         }
 
         @Override
         public void sniperWinning() {
-            sniperState = SniperState.winning;
+            sniperStateForTests = SniperStateForTests.winning;
         }
 
         @Override

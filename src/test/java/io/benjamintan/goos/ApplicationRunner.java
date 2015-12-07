@@ -1,6 +1,8 @@
 package io.benjamintan.goos;
 
 public class ApplicationRunner {
+    private String itemId;
+
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     public static final String XMPP_HOSTNAME = "localhost";
@@ -15,6 +17,7 @@ public class ApplicationRunner {
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(final FakeAuctionServer auction) {
+        itemId = auction.getItemId();
 
         Thread thread = new Thread("Test Application") {
             @Override
@@ -39,16 +42,22 @@ public class ApplicationRunner {
         driver.showSniperStatus(STATUS_LOST);
     }
 
-    public void showSniperHasWonAuction() {
-        driver.showSniperStatus(STATUS_WON);
+    public void showSniperHasWonAuction(int lastPrice) {
+        driver.showSniperStatus(itemId, lastPrice, lastPrice, MainWindow.STATUS_WON);
     }
 
+
+    public void hasShownSniperIsWinning(int winningBid) {
+        driver.showSniperStatus(itemId, winningBid, winningBid, MainWindow.STATUS_WINNING);
+    }
+
+    @Deprecated
     public void hasShownSniperIsBidding() {
         driver.showSniperStatus(STATUS_BIDDING);
     }
 
-    public void hasShownSniperIsWinning() {
-        driver.showSniperStatus(STATUS_WINNING);
+    public void hasShownSniperIsBidding(int lastPrice, int lastBid)  {
+        driver.showSniperStatus(itemId, lastPrice, lastBid, MainWindow.STATUS_BIDDING);
     }
 
     public void stop() {
@@ -56,4 +65,5 @@ public class ApplicationRunner {
             driver.dispose();
         }
     }
+
 }

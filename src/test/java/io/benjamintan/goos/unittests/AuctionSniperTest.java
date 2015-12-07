@@ -58,7 +58,7 @@ public class AuctionSniperTest {
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
         sniper.currentPrice(123, 45, FromSniper);
 
-        verify(sniperListenerSpy, atLeastOnce()).sniperWinning();
+        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperState(ITEM_ID, 123, 123));
         assertEquals(SniperStateForTests.winning, sniperStateForTests);
     }
 
@@ -82,7 +82,7 @@ public class AuctionSniperTest {
         }
 
         @Override
-        public void sniperWinning() {
+        public void sniperWinning(SniperState sniperState) {
             sniperStateForTests = SniperStateForTests.winning;
         }
 

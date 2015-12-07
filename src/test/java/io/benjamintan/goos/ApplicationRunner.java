@@ -51,11 +51,6 @@ public class ApplicationRunner {
         driver.showSniperStatus(itemId, winningBid, winningBid, MainWindow.STATUS_WINNING);
     }
 
-    @Deprecated
-    public void hasShownSniperIsBidding() {
-        driver.showSniperStatus(STATUS_BIDDING);
-    }
-
     public void hasShownSniperIsBidding(int lastPrice, int lastBid)  {
         driver.showSniperStatus(itemId, lastPrice, lastBid, MainWindow.STATUS_BIDDING);
     }

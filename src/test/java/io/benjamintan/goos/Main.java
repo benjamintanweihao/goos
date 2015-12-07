@@ -30,6 +30,29 @@ public class Main {
         startUserInterface();
     }
 
+    public static void main(String... args) throws Exception {
+        Main main = new Main();
+        main.joinAuction(
+                connection(
+                        args[ARG_HOSTNAME],
+                        args[ARG_USERNAME],
+                        args[ARG_PASSWORD])
+                , args[ARG_ITEM_ID]);
+
+    }
+
+    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
+        XMPPConnection connection = new XMPPConnection(hostname);
+        connection.connect();
+        connection.login(username, password);
+
+        return connection;
+    }
+
+    private static String auctionId(String itemId, XMPPConnection connection) {
+        return format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
+    }
+
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
 
         disconnectWhenUICloses(connection);
@@ -55,31 +78,8 @@ public class Main {
         });
     }
 
-    public static void main(String... args) throws Exception {
-        Main main = new Main();
-        main.joinAuction(
-                connection(
-                        args[ARG_HOSTNAME],
-                        args[ARG_USERNAME],
-                        args[ARG_PASSWORD])
-                , args[ARG_ITEM_ID]);
-
-    }
-
-    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
-        XMPPConnection connection = new XMPPConnection(hostname);
-        connection.connect();
-        connection.login(username, password);
-
-        return connection;
-    }
-
     private void startUserInterface() throws Exception {
         SwingUtilities.invokeAndWait(() -> ui = new MainWindow());
-    }
-
-    private static String auctionId(String itemId, XMPPConnection connection) {
-        return format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
     public class SniperStateDisplayer implements SniperListener {
@@ -95,8 +95,8 @@ public class Main {
         }
 
         @Override
-        public void sniperWinning() {
-            showStatus(MainWindow.STATUS_WINNING);
+        public void sniperWinning(SniperState state) {
+            showStatus(state, MainWindow.STATUS_WINNING);
         }
 
         @Override
@@ -104,7 +104,11 @@ public class Main {
             showStatus(MainWindow.STATUS_WON);
         }
 
-        private void showStatus(final String status) {
+        private void showStatus(SniperState state, final String status) {
+            SwingUtilities.invokeLater(() -> ui.sniperStatusChanged(state, status));
+        }
+
+        private void showStatus(String status) {
             SwingUtilities.invokeLater(() -> ui.showStatusText(status));
         }
     }

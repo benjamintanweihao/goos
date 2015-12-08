@@ -2,7 +2,7 @@ package io.benjamintan.goos.unittests;
 
 import io.benjamintan.goos.Column;
 import io.benjamintan.goos.MainWindow;
-import io.benjamintan.goos.SniperState;
+import io.benjamintan.goos.SniperSnapshot;
 import io.benjamintan.goos.SnipersTableModel;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -36,7 +36,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void setsSniperValuesInColumns() {
-        model.sniperStatusChanged(new SniperState("item id", 555, 666),
+        model.sniperStatusChanged(new SniperSnapshot("item id", 555, 666),
                 MainWindow.STATUS_BIDDING);
 
         verify(listener).tableChanged(argThat(aRowChangedEvent()));
@@ -44,7 +44,7 @@ public class SnipersTableModelTest {
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
+        assertColumnEquals(Column.SNIPER_STATE, MainWindow.STATUS_BIDDING);
     }
 
     private void assertColumnEquals(Column column, Object expected) {

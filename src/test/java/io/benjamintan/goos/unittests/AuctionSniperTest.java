@@ -3,7 +3,7 @@ package io.benjamintan.goos.unittests;
 import io.benjamintan.goos.Auction;
 import io.benjamintan.goos.AuctionSniper;
 import io.benjamintan.goos.SniperListener;
-import io.benjamintan.goos.SniperState;
+import io.benjamintan.goos.SniperSnapshot;
 import org.junit.Test;
 
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromOtherBidder;
@@ -50,7 +50,7 @@ public class AuctionSniperTest {
 
         verify(auction, times(1)).bid(bid);
         verify(sniperListenerSpy, atLeastOnce()).sniperBidding(
-               new SniperState(ITEM_ID, price, bid)
+               new SniperSnapshot(ITEM_ID, price, bid)
         );
     }
 
@@ -58,7 +58,7 @@ public class AuctionSniperTest {
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
         sniper.currentPrice(123, 45, FromSniper);
 
-        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperState(ITEM_ID, 123, 123));
+        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperSnapshot(ITEM_ID, 123, 123));
         assertEquals(SniperStateForTests.winning, sniperStateForTests);
     }
 
@@ -77,12 +77,12 @@ public class AuctionSniperTest {
         }
 
         @Override
-        public void sniperBidding(SniperState sniperState) {
+        public void sniperBidding(SniperSnapshot sniperSnapshot) {
             sniperStateForTests = SniperStateForTests.bidding;
         }
 
         @Override
-        public void sniperWinning(SniperState sniperState) {
+        public void sniperWinning(SniperSnapshot sniperSnapshot) {
             sniperStateForTests = SniperStateForTests.winning;
         }
 

@@ -28,11 +28,11 @@ public class AuctionSniper implements AuctionEventListener {
         isWinning = priceSource == FromSniper;
 
         if (isWinning) {
-            sniperListener.sniperWinning(new SniperState(itemId, price, price));
+            sniperListener.sniperWinning(new SniperSnapshot(itemId, price, price));
         } else {
             int bid = price + increment;
             auction.bid(bid);
-            sniperListener.sniperBidding(new SniperState(itemId, price, bid));
+            sniperListener.sniperBidding(new SniperSnapshot(itemId, price, bid));
         }
     }
 }

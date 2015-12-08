@@ -3,12 +3,12 @@ package io.benjamintan.goos;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class SniperState {
+public class SniperSnapshot {
     public final String itemId;
     public final int lastPrice;
     public final int lastBid;
 
-    public SniperState(String itemId, int lastPrice, int lastBid) {
+    public SniperSnapshot(String itemId, int lastPrice, int lastBid) {
         this.itemId = itemId;
         this.lastPrice = lastPrice;
         this.lastBid = lastBid;
@@ -20,7 +20,7 @@ public class SniperState {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        SniperState that = (SniperState) o;
+        SniperSnapshot that = (SniperSnapshot) o;
 
         return new EqualsBuilder()
                 .append(lastPrice, that.lastPrice)
@@ -40,7 +40,7 @@ public class SniperState {
 
     @Override
     public String toString() {
-        return "SniperState{" +
+        return "SniperSnapshot{" +
                 "itemId='" + itemId + '\'' +
                 ", lastPrice=" + lastPrice +
                 ", lastBid=" + lastBid +

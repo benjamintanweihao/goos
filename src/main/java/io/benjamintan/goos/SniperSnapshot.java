@@ -1,41 +1,39 @@
 package io.benjamintan.goos;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 public class SniperSnapshot {
     public final String itemId;
     public final int lastPrice;
     public final int lastBid;
+    public final SniperState state;
 
-    public SniperSnapshot(String itemId, int lastPrice, int lastBid) {
+    public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperState state) {
         this.itemId = itemId;
         this.lastPrice = lastPrice;
         this.lastBid = lastBid;
+        this.state = state;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         SniperSnapshot that = (SniperSnapshot) o;
 
-        return new EqualsBuilder()
-                .append(lastPrice, that.lastPrice)
-                .append(lastBid, that.lastBid)
-                .append(itemId, that.itemId)
-                .isEquals();
+        if (lastPrice != that.lastPrice) return false;
+        if (lastBid != that.lastBid) return false;
+        if (itemId != null ? !itemId.equals(that.itemId) : that.itemId != null) return false;
+        return state == that.state;
+
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(itemId)
-                .append(lastPrice)
-                .append(lastBid)
-                .toHashCode();
+        int result = itemId != null ? itemId.hashCode() : 0;
+        result = 31 * result + lastPrice;
+        result = 31 * result + lastBid;
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -44,6 +42,7 @@ public class SniperSnapshot {
                 "itemId='" + itemId + '\'' +
                 ", lastPrice=" + lastPrice +
                 ", lastBid=" + lastBid +
+                ", state=" + state +
                 '}';
     }
 }

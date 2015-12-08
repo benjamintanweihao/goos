@@ -1,9 +1,6 @@
 package io.benjamintan.goos.unittests;
 
-import io.benjamintan.goos.Auction;
-import io.benjamintan.goos.AuctionSniper;
-import io.benjamintan.goos.SniperListener;
-import io.benjamintan.goos.SniperSnapshot;
+import io.benjamintan.goos.*;
 import org.junit.Test;
 
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromOtherBidder;
@@ -19,7 +16,7 @@ public class AuctionSniperTest {
 
 
     private enum SniperStateForTests {
-        idle, winning, bidding
+        idle, winning, bidding, lost
     }
 
     private SniperStateForTests sniperStateForTests = SniperStateForTests.idle;
@@ -37,7 +34,7 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
 
         verify(sniperListenerSpy, times(1)).sniperLost();
-        assertEquals(SniperStateForTests.bidding, sniperStateForTests);
+        assertEquals(SniperStateForTests.lost, sniperStateForTests);
     }
 
     @Test
@@ -49,8 +46,8 @@ public class AuctionSniperTest {
         sniper.currentPrice(price, increment, FromOtherBidder);
 
         verify(auction, times(1)).bid(bid);
-        verify(sniperListenerSpy, atLeastOnce()).sniperBidding(
-               new SniperSnapshot(ITEM_ID, price, bid)
+        verify(sniperListenerSpy, atLeastOnce()).sniperStateChanged(
+               new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING)
         );
     }
 
@@ -58,7 +55,7 @@ public class AuctionSniperTest {
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
         sniper.currentPrice(123, 45, FromSniper);
 
-        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperSnapshot(ITEM_ID, 123, 123));
+        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperSnapshot(ITEM_ID, 123, 123, SniperState.BIDDING));
         assertEquals(SniperStateForTests.winning, sniperStateForTests);
     }
 
@@ -74,6 +71,7 @@ public class AuctionSniperTest {
     private class SniperListenerStub implements SniperListener {
         @Override
         public void sniperLost() {
+            sniperStateForTests = SniperStateForTests.lost;
         }
 
         @Override
@@ -88,6 +86,11 @@ public class AuctionSniperTest {
 
         @Override
         public void sniperWon() {
+
+        }
+
+        @Override
+        public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
 
         }
     }

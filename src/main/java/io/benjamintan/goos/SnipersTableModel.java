@@ -3,9 +3,12 @@ package io.benjamintan.goos;
 import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel {
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0);
-    private String statusText = MainWindow.STATUS_JOINING;
-    private SniperSnapshot sniperSnapshot = STARTING_UP;
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.BIDDING);
+    private String state = MainWindow.STATUS_JOINING;
+    private SniperSnapshot snapshot = STARTING_UP;
+
+    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING};
+
 
     @Override
     public int getRowCount() {
@@ -21,26 +24,27 @@ public class SnipersTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (Column.at(columnIndex)) {
             case ITEM_IDENTIFIER:
-                return sniperSnapshot.itemId;
+                return snapshot.itemId;
             case LAST_PRICE:
-                return sniperSnapshot.lastPrice;
+                return snapshot.lastPrice;
             case LAST_BID:
-                return sniperSnapshot.lastBid;
+                return snapshot.lastBid;
             case SNIPER_STATE:
-                return statusText;
+                return state;
             default:
                 throw new IllegalArgumentException("No column at " + columnIndex);
         }
     }
 
-    public void sniperStatusChanged(SniperSnapshot newSniperSnapshot, String newStatusText) {
-        sniperSnapshot = newSniperSnapshot;
-        statusText = newStatusText;
+    public void setState(String newState) {
+        state = newState;
         fireTableRowsUpdated(0, 0);
     }
 
-    public void setStatusText(String newStatusText) {
-        statusText = newStatusText;
+    public void sniperStateChanged(SniperSnapshot newSnapshot) {
+        this.snapshot = newSnapshot;
+        this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
+
         fireTableRowsUpdated(0, 0);
     }
 }

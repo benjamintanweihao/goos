@@ -46,7 +46,6 @@ public class ApplicationRunner {
         driver.showSniperStatus(itemId, lastPrice, lastPrice, MainWindow.STATUS_WON);
     }
 
-
     public void hasShownSniperIsWinning(int winningBid) {
         driver.showSniperStatus(itemId, winningBid, winningBid, MainWindow.STATUS_WINNING);
     }

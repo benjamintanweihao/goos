@@ -30,7 +30,7 @@ public class AuctionSniperTest {
                 new SniperSnapshot(ITEM_ID, 123, 168, SniperState.BIDDING));
 
         verify(sniperListener, times(1)).sniperStateChanged(
-                new SniperSnapshot(ITEM_ID, 123, 168, SniperState.LOST));
+                new SniperSnapshot(ITEM_ID, 123, 123, SniperState.LOST));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AuctionSniperTest {
                 new SniperSnapshot(ITEM_ID, 123, 0, SniperState.WINNING));
 
         verify(sniperListener, times(1)).sniperStateChanged(
-                new SniperSnapshot(ITEM_ID, 123, 0, SniperState.WON));
+                new SniperSnapshot(ITEM_ID, 123, 123, SniperState.WON));
     }
 
 }

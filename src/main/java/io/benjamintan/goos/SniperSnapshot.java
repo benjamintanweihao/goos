@@ -45,4 +45,24 @@ public class SniperSnapshot {
                 ", state=" + state +
                 '}';
     }
+
+    public SniperSnapshot bidding(int price, int bid) {
+        return new SniperSnapshot(itemId, price, bid, SniperState.BIDDING);
+    }
+
+    public SniperSnapshot winning(int price) {
+        return new SniperSnapshot(itemId, price, lastBid, SniperState.WINNING);
+    }
+
+    public static SniperSnapshot joining(String itemId) {
+        return new SniperSnapshot(itemId, 0, 0, SniperState.JOINING);
+    }
+
+    public SniperSnapshot won() {
+        return new SniperSnapshot(itemId, lastPrice, lastBid, SniperState.WON);
+    }
+
+    public SniperSnapshot lost() {
+        return new SniperSnapshot(itemId, lastPrice, lastBid, SniperState.LOST);
+    }
 }

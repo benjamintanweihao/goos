@@ -7,7 +7,8 @@ public class SnipersTableModel extends AbstractTableModel {
     private String state = MainWindow.STATUS_JOINING;
     private SniperSnapshot snapshot = STARTING_UP;
 
-    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING};
+    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING,
+            MainWindow.STATUS_WINNING, MainWindow.STATUS_LOST, MainWindow.STATUS_WON};
 
 
     @Override
@@ -34,11 +35,6 @@ public class SnipersTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("No column at " + columnIndex);
         }
-    }
-
-    public void setState(String newState) {
-        state = newState;
-        fireTableRowsUpdated(0, 0);
     }
 
     public void sniperStateChanged(SniperSnapshot newSnapshot) {

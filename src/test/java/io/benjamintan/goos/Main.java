@@ -85,36 +85,8 @@ public class Main {
     public class SniperStateDisplayer implements SniperListener {
 
         @Override
-        public void sniperLost() {
-            showStatus(MainWindow.STATUS_LOST);
-        }
-
-        @Override
-        public void sniperBidding(SniperSnapshot state) {
-            ui.sniperStateChanged(state);
-        }
-
-        @Override
-        public void sniperWinning(SniperSnapshot state) {
-            showStatus(state, MainWindow.STATUS_WINNING);
-        }
-
-        @Override
-        public void sniperWon() {
-            showStatus(MainWindow.STATUS_WON);
-        }
-
-        @Override
-        public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-
-        }
-
-        private void showStatus(SniperSnapshot state, final String status) {
-            SwingUtilities.invokeLater(() -> ui.sniperStateChanged(state));
-        }
-
-        private void showStatus(String status) {
-            SwingUtilities.invokeLater(() -> ui.showStatusText(status));
+        public void sniperStateChanged(SniperSnapshot snapshot) {
+            SwingUtilities.invokeLater(() -> ui.sniperStateChanged(snapshot));
         }
     }
 }

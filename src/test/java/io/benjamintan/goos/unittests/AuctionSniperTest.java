@@ -5,27 +5,20 @@ import org.junit.Test;
 
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromOtherBidder;
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromSniper;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class AuctionSniperTest {
     private static final String ITEM_ID = "item-54321";
     private final Auction auction = mock(Auction.class);
-    private final SniperListener sniperListenerSpy = spy(new SniperListenerStub());
-    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListenerSpy);
-
-
-    private enum SniperStateForTests {
-        idle, winning, bidding, lost
-    }
-
-    private SniperStateForTests sniperStateForTests = SniperStateForTests.idle;
+    private final SniperListener sniperListener = mock(SniperListener.class);
+    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListener);
 
     @Test
     public void reportsLostIfAuctionClosesImmediately() {
         sniper.auctionClosed();
 
-        verify(sniperListenerSpy, times(1)).sniperLost();
+        verify(sniperListener, times(1)).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 0, 0, SniperState.LOST));
     }
 
     @Test
@@ -33,8 +26,11 @@ public class AuctionSniperTest {
         sniper.currentPrice(123, 45, FromOtherBidder);
         sniper.auctionClosed();
 
-        verify(sniperListenerSpy, times(1)).sniperLost();
-        assertEquals(SniperStateForTests.lost, sniperStateForTests);
+        verify(sniperListener, times(1)).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 123, 168, SniperState.BIDDING));
+
+        verify(sniperListener, times(1)).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 123, 168, SniperState.LOST));
     }
 
     @Test
@@ -46,8 +42,8 @@ public class AuctionSniperTest {
         sniper.currentPrice(price, increment, FromOtherBidder);
 
         verify(auction, times(1)).bid(bid);
-        verify(sniperListenerSpy, atLeastOnce()).sniperStateChanged(
-               new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING)
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING)
         );
     }
 
@@ -55,8 +51,8 @@ public class AuctionSniperTest {
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
         sniper.currentPrice(123, 45, FromSniper);
 
-        verify(sniperListenerSpy, atLeastOnce()).sniperWinning(new SniperSnapshot(ITEM_ID, 123, 123, SniperState.BIDDING));
-        assertEquals(SniperStateForTests.winning, sniperStateForTests);
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 123, 0, SniperState.WINNING));
     }
 
     @Test
@@ -64,34 +60,11 @@ public class AuctionSniperTest {
         sniper.currentPrice(123, 45, FromSniper);
         sniper.auctionClosed();
 
-        verify(sniperListenerSpy, atLeastOnce()).sniperWon();
-        assertEquals(SniperStateForTests.winning, sniperStateForTests);
+        verify(sniperListener, times(1)).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 123, 0, SniperState.WINNING));
+
+        verify(sniperListener, times(1)).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 123, 0, SniperState.WON));
     }
 
-    private class SniperListenerStub implements SniperListener {
-        @Override
-        public void sniperLost() {
-            sniperStateForTests = SniperStateForTests.lost;
-        }
-
-        @Override
-        public void sniperBidding(SniperSnapshot sniperSnapshot) {
-            sniperStateForTests = SniperStateForTests.bidding;
-        }
-
-        @Override
-        public void sniperWinning(SniperSnapshot sniperSnapshot) {
-            sniperStateForTests = SniperStateForTests.winning;
-        }
-
-        @Override
-        public void sniperWon() {
-
-        }
-
-        @Override
-        public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-
-        }
-    }
 }

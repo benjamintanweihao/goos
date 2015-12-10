@@ -1,7 +1,5 @@
 package io.benjamintan.goos;
 
-import com.objogate.exception.Defect;
-
 public enum SniperState {
     JOINING {
         @Override public SniperState whenAuctionClosed() {

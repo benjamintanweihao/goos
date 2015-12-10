@@ -3,12 +3,18 @@ package io.benjamintan.goos;
 import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel {
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.BIDDING);
-    private String state = MainWindow.STATUS_JOINING;
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+
     private SniperSnapshot snapshot = STARTING_UP;
 
-    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING,
-            MainWindow.STATUS_WINNING, MainWindow.STATUS_LOST, MainWindow.STATUS_WON};
+    public static final String STATUS_JOINING = "joining";
+    public static final String STATUS_LOST = "lost";
+    public static final String STATUS_BIDDING = "bidding";
+    public static final String STATUS_WINNING = "winning";
+    public static final String STATUS_WON = "won";
+
+    private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING,
+            STATUS_WINNING, STATUS_LOST, STATUS_WON};
 
 
     @Override
@@ -31,15 +37,18 @@ public class SnipersTableModel extends AbstractTableModel {
             case LAST_BID:
                 return snapshot.lastBid;
             case SNIPER_STATE:
-                return state;
+                return textFor(snapshot);
             default:
                 throw new IllegalArgumentException("No column at " + columnIndex);
         }
     }
 
+    private String textFor(SniperSnapshot snapshot) {
+        return STATUS_TEXT[snapshot.state.ordinal()];
+    }
+
     public void sniperStateChanged(SniperSnapshot newSnapshot) {
         this.snapshot = newSnapshot;
-        this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
 
         fireTableRowsUpdated(0, 0);
     }

@@ -7,6 +7,7 @@ import org.jivesoftware.smack.XMPPException;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import static java.lang.String.format;
 
@@ -26,7 +27,7 @@ public class Main {
 
 
     private MainWindow ui;
-    private Chat notToBeGCd;
+    private ArrayList<Chat> notToBeGCd = new ArrayList<>();
 
     public Main() throws Exception {
         startUserInterface();
@@ -34,13 +35,13 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        main.joinAuction(
-                connection(
-                        args[ARG_HOSTNAME],
-                        args[ARG_USERNAME],
-                        args[ARG_PASSWORD])
-                , args[ARG_ITEM_ID]);
+        XMPPConnection connection =
+            connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        main.disconnectWhenUICloses(connection);
 
+        for (int i = 3; i < args.length; i++) {
+            main.joinAuction(connection, args[i]);
+        }
     }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
@@ -56,16 +57,14 @@ public class Main {
     }
 
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-
-        disconnectWhenUICloses(connection);
-
         final Chat chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection), null);
 
-        this.notToBeGCd = chat;
+        this.notToBeGCd.add(chat);
 
         Auction auction = new XMPPAuction(chat);
-        chat.addMessageListener(new AuctionMessageTranslator(
+        chat.addMessageListener(
+                new AuctionMessageTranslator(
                 connection.getUser(),
                 new AuctionSniper(auction, itemId, new SwingThreadSniperListener(snipers))));
         auction.join();

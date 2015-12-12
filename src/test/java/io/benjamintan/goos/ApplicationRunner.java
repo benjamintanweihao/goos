@@ -1,5 +1,7 @@
 package io.benjamintan.goos;
 
+import static io.benjamintan.goos.SnipersTableModel.textFor;
+
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
@@ -9,11 +11,20 @@ public class ApplicationRunner {
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(final FakeAuctionServer... auctions) {
+        startSniper();
+        for (FakeAuctionServer auction : auctions) {
+            String itemId = auction.getItemId();
+            driver.startBiddingFor(itemId);
+            driver.showSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
+        }
+    }
+
+    private void startSniper() {
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
                 try {
-                    Main.main(arguments(auctions));
+                    Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -35,7 +35,7 @@ public class ApplicationRunner {
         arguments[1] = SNIPER_ID;
         arguments[2] = SNIPER_PASSWORD;
         for (int i = 0; i < auctions.length; i++) {
-           arguments[i + 3]  = auctions[i].getItemId();
+            arguments[i + 3] = auctions[i].getItemId();
         }
 
         return arguments;
@@ -53,7 +53,7 @@ public class ApplicationRunner {
         driver.showSniperStatus(auction.getItemId(), winningBid, winningBid, SnipersTableModel.STATUS_WINNING);
     }
 
-    public void hasShownSniperIsBidding(FakeAuctionServer auction, int lastPrice, int lastBid)  {
+    public void hasShownSniperIsBidding(FakeAuctionServer auction, int lastPrice, int lastBid) {
         driver.showSniperStatus(auction.getItemId(), lastPrice, lastBid, SnipersTableModel.STATUS_BIDDING);
     }
 

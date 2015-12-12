@@ -1,11 +1,11 @@
 package io.benjamintan.goos;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener {
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
 
-    private SniperSnapshot snapshot = STARTING_UP;
+    private ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
 
     public static final String STATUS_JOINING = "joining";
     public static final String STATUS_LOST = "lost";
@@ -23,7 +23,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public int getRowCount() {
-        return 1;
+        return snapshots.size();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return Column.at(columnIndex).valueIn(snapshot);
+        return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
     }
 
     public static String textFor(SniperState state) {
@@ -41,9 +41,26 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     }
 
     @Override
-    public void sniperStateChanged(SniperSnapshot newSnapshot) {
-        this.snapshot = newSnapshot;
+    public void sniperStateChanged(SniperSnapshot snapshot) {
+        int rowOfTheSniperThatChanged = rowOfTheSniperThatChanged(snapshot);
+        snapshots.set(rowOfTheSniperThatChanged, snapshot);
+        fireTableRowsUpdated(rowOfTheSniperThatChanged,
+                rowOfTheSniperThatChanged);
+    }
 
-        fireTableRowsUpdated(0, 0);
+    private int rowOfTheSniperThatChanged(SniperSnapshot snapshot) {
+        for (int rowNumber = 0; rowNumber < snapshots.size(); rowNumber++) {
+            if (snapshots.get(rowNumber).isForTheSameItemAs(snapshot)) {
+                return rowNumber;
+            }
+        }
+        throw new Defect("Cannot find any previous snapshot for "
+                + snapshot.itemId);
+    }
+
+    public void addSniper(SniperSnapshot snapshot) {
+        snapshots.add(snapshot);
+        final int lastInsertedRow = snapshots.size() - 1;
+        fireTableRowsInserted(lastInsertedRow, lastInsertedRow);
     }
 }

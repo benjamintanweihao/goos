@@ -1,6 +1,9 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.uitests;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
+import io.benjamintan.goos.AuctionSniperDriver;
+import io.benjamintan.goos.MainWindow;
+import io.benjamintan.goos.SnipersTableModel;
 import org.junit.Before;
 import org.junit.Test;
 

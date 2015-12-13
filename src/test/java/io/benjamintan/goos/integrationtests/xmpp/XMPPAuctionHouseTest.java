@@ -17,7 +17,7 @@ public class XMPPAuctionHouseTest {
     private XMPPAuctionHouse auctionHouse;
 
     @Before
-    public void connect() throws Exception {
+    public void openConnection() throws Exception {
         auctionHouse = XMPPAuctionHouse.connect(
                 FakeAuctionServer.XMPP_HOSTNAME,
                 ApplicationRunner.SNIPER_ID,
@@ -26,14 +26,17 @@ public class XMPPAuctionHouseTest {
     }
 
     @After
-    public void disconnect() {
-        auctionHouse.disconnect();
+    public void closeConnection() {
+        if (auctionHouse != null) {
+            auctionHouse.disconnect();
+        }
     }
 
     @Before
     public void startAuction() throws XMPPException {
         auctionServer.startSellingItem();
     }
+
 
     @After
     public void stopAuction() {
@@ -42,9 +45,9 @@ public class XMPPAuctionHouseTest {
 
     @Test
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
-        CountDownLatch auctionWasClosed = new CountDownLatch(1);
+        final CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+        final Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 
         auction.join();

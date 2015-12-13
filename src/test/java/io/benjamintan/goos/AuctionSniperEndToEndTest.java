@@ -16,6 +16,7 @@ public class AuctionSniperEndToEndTest {
         System.setProperty("com.objogate.wl.keyboard", "Mac-GB");
     }
 
+
     @Test
     public void sniperJoinsAuctionUntilAuctionCloses() throws Exception {
         auction.startSellingItem();

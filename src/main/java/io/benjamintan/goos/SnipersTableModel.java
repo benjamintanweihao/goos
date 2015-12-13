@@ -1,11 +1,14 @@
 package io.benjamintan.goos;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener {
+public class SnipersTableModel extends AbstractTableModel
+    implements SniperListener, SniperCollector {
 
     private ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
+    private final ArrayList<AuctionSniper> notToBeGCd = new ArrayList<>();
 
     public static final String STATUS_JOINING = "joining";
     public static final String STATUS_LOST = "lost";
@@ -62,5 +65,32 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         snapshots.add(snapshot);
         final int lastInsertedRow = snapshots.size() - 1;
         fireTableRowsInserted(lastInsertedRow, lastInsertedRow);
+    }
+
+    @Override
+    public void addSniper(AuctionSniper sniper) {
+        notToBeGCd.add(sniper);
+        addSniperSnapshot(sniper.getSnapshot());
+        sniper.addSniperListener(new SwingThreadSniperListener(this));
+    }
+
+    private void addSniperSnapshot(SniperSnapshot snapshot) {
+       snapshots.add(snapshot);
+       int row = snapshots.size() - 1;
+       fireTableRowsInserted(row, row);
+    }
+
+    public class SwingThreadSniperListener implements SniperListener {
+
+        private SnipersTableModel snipers;
+
+        public SwingThreadSniperListener(SnipersTableModel snipers) {
+            this.snipers = snipers;
+        }
+
+        @Override
+        public void sniperStateChanged(final SniperSnapshot snapshot) {
+            SwingUtilities.invokeLater(() -> snipers.sniperStateChanged(snapshot));
+        }
     }
 }

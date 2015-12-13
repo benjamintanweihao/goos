@@ -43,7 +43,6 @@ public class XMPPAuction implements Auction {
     }
 
     private void sendMessage(final String message) {
-
         try {
             chat.sendMessage(message);
         } catch (XMPPException e) {

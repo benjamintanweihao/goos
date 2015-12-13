@@ -1,6 +1,7 @@
 package io.benjamintan.goos.unittests;
 
 import io.benjamintan.goos.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import static io.benjamintan.goos.AuctionEventListener.PriceSource.FromOtherBidder;
@@ -11,7 +12,12 @@ public class AuctionSniperTest {
     private static final String ITEM_ID = "item-54321";
     private final Auction auction = mock(Auction.class);
     private final SniperListener sniperListener = mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID);
+
+    @Before
+    public void addSniperListener() {
+        sniper.addSniperListener(sniperListener);
+    }
 
     @Test
     public void reportsLostIfAuctionClosesImmediately() {

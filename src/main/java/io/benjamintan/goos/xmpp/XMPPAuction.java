@@ -12,8 +12,6 @@ import static java.lang.String.format;
 public class XMPPAuction implements Auction {
     private Chat chat;
 
-    public static final String AUCTION_RESOURCE = "auction";
-
     final Announcer<AuctionEventListener> auctionEventListeners =
             Announcer.to(AuctionEventListener.class);
 
@@ -52,19 +50,4 @@ public class XMPPAuction implements Auction {
             e.printStackTrace();
         }
     }
-
-
-
-    public static XMPPConnection connect(String hostname, String username, String password) throws Exception {
-        XMPPConnection connection = new XMPPConnection(hostname);
-        try {
-            connection.connect();
-            connection.login(username, password, AUCTION_RESOURCE);
-            return connection;
-
-        } catch (XMPPException xmppe) {
-            throw new Exception("Could not connect to auction: " + connection, xmppe);
-        }
-    }
-
 }

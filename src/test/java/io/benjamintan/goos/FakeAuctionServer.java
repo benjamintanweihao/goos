@@ -1,5 +1,6 @@
 package io.benjamintan.goos;
 
+import io.benjamintan.goos.xmpp.XMPPAuction;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.jivesoftware.smack.Chat;

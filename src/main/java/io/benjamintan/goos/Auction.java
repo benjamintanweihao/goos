@@ -5,5 +5,5 @@ public interface Auction {
 
     void join();
 
-    void addAuctionEventListener(AuctionSniper auctionSniper);
+    void addAuctionEventListener(AuctionEventListener auctionEventListener);
 }

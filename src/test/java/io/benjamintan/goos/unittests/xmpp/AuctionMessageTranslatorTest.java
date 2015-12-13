@@ -1,8 +1,8 @@
-package io.benjamintan.goos.unittests;
+package io.benjamintan.goos.unittests.xmpp;
 
 import io.benjamintan.goos.ApplicationRunner;
 import io.benjamintan.goos.AuctionEventListener;
-import io.benjamintan.goos.AuctionMessageTranslator;
+import io.benjamintan.goos.xmpp.AuctionMessageTranslator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.junit.Test;

@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+
 public class AuctionSniperEndToEndTest {
     private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
     private final FakeAuctionServer auction2 = new FakeAuctionServer("item-65432");

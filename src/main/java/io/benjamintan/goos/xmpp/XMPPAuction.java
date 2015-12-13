@@ -1,5 +1,8 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.xmpp;
 
+import io.benjamintan.goos.Announcer;
+import io.benjamintan.goos.Auction;
+import io.benjamintan.goos.AuctionEventListener;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -9,11 +12,7 @@ import static java.lang.String.format;
 public class XMPPAuction implements Auction {
     private Chat chat;
 
-
     public static final String AUCTION_RESOURCE = "auction";
-    public static final String ITEM_ID_AS_LOGIN = "auction-%s";
-    private static final String AUCTION_ID_FORMAT =
-            ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
 
     final Announcer<AuctionEventListener> auctionEventListeners =
             Announcer.to(AuctionEventListener.class);
@@ -23,9 +22,9 @@ public class XMPPAuction implements Auction {
     public static final String BID_COMMAND_FORMAT =
             "SOLVersion 1.1; Command: BID; Price: %d;";
 
-    public XMPPAuction(XMPPConnection connection, String itemId) {
+    public XMPPAuction(XMPPConnection connection, String auctionId) {
         this.chat = connection.getChatManager().createChat(
-                auctionId(itemId, connection),
+                auctionId,
                 new AuctionMessageTranslator(connection.getUser(),
                         auctionEventListeners.announce()));
     }
@@ -41,8 +40,8 @@ public class XMPPAuction implements Auction {
     }
 
     @Override
-    public void addAuctionEventListener(AuctionSniper auctionSniper) {
-        auctionEventListeners.addListener(auctionSniper);
+    public void addAuctionEventListener(AuctionEventListener auctionEventListener) {
+        auctionEventListeners.addListener(auctionEventListener);
     }
 
     private void sendMessage(final String message) {
@@ -54,8 +53,18 @@ public class XMPPAuction implements Auction {
         }
     }
 
-    private static String auctionId(String itemId, XMPPConnection connection) {
-        return format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
+
+
+    public static XMPPConnection connect(String hostname, String username, String password) throws Exception {
+        XMPPConnection connection = new XMPPConnection(hostname);
+        try {
+            connection.connect();
+            connection.login(username, password, AUCTION_RESOURCE);
+            return connection;
+
+        } catch (XMPPException xmppe) {
+            throw new Exception("Could not connect to auction: " + connection, xmppe);
+        }
     }
 
 }

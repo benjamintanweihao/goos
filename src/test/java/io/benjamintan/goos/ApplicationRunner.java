@@ -1,5 +1,7 @@
 package io.benjamintan.goos;
 
+import io.benjamintan.goos.uitests.AuctionSniperDriver;
+
 import static io.benjamintan.goos.SnipersTableModel.textFor;
 
 public class ApplicationRunner {
@@ -38,18 +40,6 @@ public class ApplicationRunner {
         driver = new AuctionSniperDriver(1000);
         driver.hasTitle(MainWindow.APPLICATION_NAME);
         driver.hasColumnTitles();
-    }
-
-    private static String[] arguments(FakeAuctionServer... auctions) {
-        String[] arguments = new String[auctions.length + 3];
-        arguments[0] = XMPP_HOSTNAME;
-        arguments[1] = SNIPER_ID;
-        arguments[2] = SNIPER_PASSWORD;
-        for (int i = 0; i < auctions.length; i++) {
-            arguments[i + 3] = auctions[i].getItemId();
-        }
-
-        return arguments;
     }
 
     public void showSniperHasLostAuction(FakeAuctionServer auction) {

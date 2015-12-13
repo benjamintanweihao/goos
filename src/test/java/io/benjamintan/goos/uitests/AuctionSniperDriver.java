@@ -1,8 +1,9 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.uitests;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.*;
 import com.objogate.wl.swing.gesture.GesturePerformer;
+import io.benjamintan.goos.MainWindow;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;

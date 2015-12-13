@@ -1,6 +1,7 @@
 package io.benjamintan.goos.integrationtests.xmpp;
 
 import io.benjamintan.goos.*;
+import io.benjamintan.goos.xmpp.XMPPAuctionHouse;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Before;

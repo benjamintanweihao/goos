@@ -2,8 +2,6 @@ package io.benjamintan.goos;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class MainWindow extends JFrame {
@@ -13,37 +11,34 @@ public class MainWindow extends JFrame {
     public static String NEW_ITEM_ID_NAME = "item id";
     public static String JOIN_BUTTON_NAME = "Join Auction";
 
-    private SnipersTableModel snipers;
     ArrayList<UserRequestListener> userRequests = new ArrayList<>();
 
-
-    public MainWindow(SnipersTableModel snipers) {
+    public MainWindow(SniperPortfolio portfolio) {
         super(APPLICATION_NAME);
-        this.snipers = snipers;
         setName(MAIN_WINDOW_NAME);
-        fillContentPane(makeSnipersTable(), makeControls());
+        fillContentPane(makeSnipersTable(portfolio), makeControls());
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
     private JPanel makeControls() {
-       JPanel controls = new JPanel(new FlowLayout());
-       final JTextField itemIdField = new JTextField();
-       itemIdField.setColumns(25);
-       itemIdField.setName(NEW_ITEM_ID_NAME);
-       controls.add(itemIdField);
+        JPanel controls = new JPanel(new FlowLayout());
+        final JTextField itemIdField = new JTextField();
+        itemIdField.setColumns(25);
+        itemIdField.setName(NEW_ITEM_ID_NAME);
+        controls.add(itemIdField);
 
-       JButton joinAuctionButton = new JButton("Join Auction");
-       joinAuctionButton.setName(JOIN_BUTTON_NAME);
-       joinAuctionButton.addActionListener(e -> {
-           for (UserRequestListener userRequest : userRequests) {
-               userRequest.joinAuction(itemIdField.getText());
-           }
-       });
-       controls.add(joinAuctionButton);
+        JButton joinAuctionButton = new JButton("Join Auction");
+        joinAuctionButton.setName(JOIN_BUTTON_NAME);
+        joinAuctionButton.addActionListener(e -> {
+            for (UserRequestListener userRequest : userRequests) {
+                userRequest.joinAuction(itemIdField.getText());
+            }
+        });
+        controls.add(joinAuctionButton);
 
-       return controls;
+        return controls;
     }
 
     private void fillContentPane(JTable snipersTable, JPanel controls) {
@@ -53,8 +48,10 @@ public class MainWindow extends JFrame {
         contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
     }
 
-    private JTable makeSnipersTable() {
-        final JTable snipersTable = new JTable(snipers);
+    private JTable makeSnipersTable(SniperPortfolio portfolio) {
+        SnipersTableModel model = new SnipersTableModel();
+        portfolio.addPortfolioListener(model);
+        final JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
     }

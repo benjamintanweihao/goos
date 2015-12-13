@@ -1,5 +1,7 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.endtoendtests;
 
+import io.benjamintan.goos.ApplicationRunner;
+import io.benjamintan.goos.FakeAuctionServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

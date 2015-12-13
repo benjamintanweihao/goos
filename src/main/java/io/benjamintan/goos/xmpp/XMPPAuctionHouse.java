@@ -1,6 +1,7 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.xmpp;
 
-import io.benjamintan.goos.xmpp.XMPPAuction;
+import io.benjamintan.goos.Auction;
+import io.benjamintan.goos.AuctionHouse;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 

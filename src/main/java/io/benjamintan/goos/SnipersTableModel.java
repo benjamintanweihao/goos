@@ -5,10 +5,9 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class SnipersTableModel extends AbstractTableModel
-    implements SniperListener, SniperCollector {
+    implements SniperListener, PortfolioListener {
 
     private ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
-    private final ArrayList<AuctionSniper> notToBeGCd = new ArrayList<>();
 
     public static final String STATUS_JOINING = "joining";
     public static final String STATUS_LOST = "lost";
@@ -67,17 +66,16 @@ public class SnipersTableModel extends AbstractTableModel
         fireTableRowsInserted(lastInsertedRow, lastInsertedRow);
     }
 
-    @Override
-    public void addSniper(AuctionSniper sniper) {
-        notToBeGCd.add(sniper);
-        addSniperSnapshot(sniper.getSnapshot());
-        sniper.addSniperListener(new SwingThreadSniperListener(this));
-    }
-
     private void addSniperSnapshot(SniperSnapshot snapshot) {
        snapshots.add(snapshot);
        int row = snapshots.size() - 1;
        fireTableRowsInserted(row, row);
+    }
+
+    @Override
+    public void sniperAdded(AuctionSniper sniper) {
+        addSniperSnapshot(sniper.getSnapshot());
+        sniper.addSniperListener(new SwingThreadSniperListener(this));
     }
 
     public class SwingThreadSniperListener implements SniperListener {

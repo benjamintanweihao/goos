@@ -1,5 +1,7 @@
 package io.benjamintan.goos;
 
+import io.benjamintan.goos.xmpp.XMPPAuctionHouse;
+
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -9,8 +11,8 @@ public class Main {
     public static final int ARG_USERNAME = 1;
     public static final int ARG_PASSWORD = 2;
 
-    private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
+    private final SniperPortfolio portfolio = new SniperPortfolio();
 
     public Main() throws Exception {
         startUserInterface();
@@ -27,8 +29,8 @@ public class Main {
         main.addUserRequestListenerFor(auctionHouse);
     }
 
-    private void addUserRequestListenerFor(AuctionHouse auctionHouse) {
-        SniperLauncher sniperLauncher = new SniperLauncher(auctionHouse, snipers);
+    private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
+        SniperLauncher sniperLauncher = new SniperLauncher(auctionHouse, portfolio);
         ui.addUserRequestListener(sniperLauncher);
     }
 
@@ -42,7 +44,7 @@ public class Main {
     }
 
     private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(snipers));
+        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(portfolio));
     }
 
 }

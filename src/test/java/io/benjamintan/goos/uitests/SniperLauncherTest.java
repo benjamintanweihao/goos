@@ -1,5 +1,6 @@
-package io.benjamintan.goos;
+package io.benjamintan.goos.uitests;
 
+import io.benjamintan.goos.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 

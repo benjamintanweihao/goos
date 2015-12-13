@@ -1,17 +1,16 @@
 package io.benjamintan.goos.uitests;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
-import io.benjamintan.goos.AuctionSniperDriver;
 import io.benjamintan.goos.MainWindow;
-import io.benjamintan.goos.SnipersTableModel;
+import io.benjamintan.goos.SniperPortfolio;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
 
 public class MainWindowTest {
-    private final SnipersTableModel tableModel = new SnipersTableModel();
-    private final MainWindow mainWindow = new MainWindow(tableModel);
+    private final SniperPortfolio portfolio = new SniperPortfolio();
+    private final MainWindow mainWindow = new MainWindow(portfolio);
     private final AuctionSniperDriver driver = new AuctionSniperDriver(100);
 
     @Before

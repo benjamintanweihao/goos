@@ -2,7 +2,10 @@ package io.benjamintan.goos;
 
 import io.benjamintan.goos.uitests.AuctionSniperDriver;
 
+import java.io.IOException;
+
 import static io.benjamintan.goos.SnipersTableModel.textFor;
+import static org.hamcrest.Matchers.containsString;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
@@ -11,6 +14,7 @@ public class ApplicationRunner {
     public static final String SNIPER_XMPP_ID = "sniper@localhost/auction";
 
     private AuctionSniperDriver driver;
+    private AuctionLogDriver logDriver = new AuctionLogDriver();
 
     public void startBiddingIn(final FakeAuctionServer... auctions) {
         startSniper();
@@ -31,6 +35,8 @@ public class ApplicationRunner {
     }
 
     private void startSniper() {
+        logDriver.clearLog();
+
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
@@ -79,5 +85,9 @@ public class ApplicationRunner {
         if (driver != null) {
             driver.dispose();
         }
+    }
+
+    public void reportsInvalidMessage(FakeAuctionServer auction, String message) throws IOException {
+        logDriver.hasEntry(containsString(message));
     }
 }

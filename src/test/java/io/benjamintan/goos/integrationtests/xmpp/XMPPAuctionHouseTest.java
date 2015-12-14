@@ -48,7 +48,7 @@ public class XMPPAuctionHouseTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         final CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        final Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+        final Auction auction = auctionHouse.auctionFor(new Item(auctionServer.getItemId(), 567));
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 
         auction.join();

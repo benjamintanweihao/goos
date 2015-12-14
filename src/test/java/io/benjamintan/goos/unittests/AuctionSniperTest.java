@@ -10,9 +10,10 @@ import static org.mockito.Mockito.*;
 
 public class AuctionSniperTest {
     private static final String ITEM_ID = "item-54321";
+    private final Item item = new Item(ITEM_ID, 1234);
     private final Auction auction = mock(Auction.class);
     private final SniperListener sniperListener = mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID);
+    private final AuctionSniper sniper = new AuctionSniper(auction, item);
 
     @Before
     public void addSniperListener() {

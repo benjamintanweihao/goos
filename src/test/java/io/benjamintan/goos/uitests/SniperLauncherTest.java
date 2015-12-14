@@ -19,14 +19,14 @@ public class SniperLauncherTest {
 
     @Test
     public void addsNewSniperToCollectorThenJoinsAuction() {
-        String itemId = "item 123";
+        Item item = new Item("item 123", Integer.MAX_VALUE);
 
         sniperLauncher = new SniperLauncher(auctionHouse, sniperCollector);
 
-        when(auctionHouse.auctionFor(itemId)).thenReturn(auction);
+        when(auctionHouse.auctionFor(item)).thenReturn(auction);
         InOrder orderedVerifier = inOrder(auction, sniperCollector, auction);
 
-        sniperLauncher.joinAuction(itemId);
+        sniperLauncher.joinAuction(item);
 
         orderedVerifier.verify(auction).addAuctionEventListener(any(AuctionSniper.class));
         orderedVerifier.verify(sniperCollector).addSniper(any(AuctionSniper.class));

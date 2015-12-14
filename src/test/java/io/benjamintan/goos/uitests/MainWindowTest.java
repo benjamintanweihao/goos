@@ -1,6 +1,7 @@
 package io.benjamintan.goos.uitests;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
+import io.benjamintan.goos.Item;
 import io.benjamintan.goos.MainWindow;
 import io.benjamintan.goos.SniperPortfolio;
 import org.junit.Before;
@@ -20,12 +21,12 @@ public class MainWindowTest {
 
     @Test
     public void makesUserRequestWhenJoinButtonClicked() {
-        final ValueMatcherProbe<String> buttonProbe =
-            new ValueMatcherProbe<>(equalTo("an item id"), "join request");
+        final ValueMatcherProbe<Item> itemProbe =
+            new ValueMatcherProbe<>(equalTo(new Item("an item id", 789)), "item request");
 
-        mainWindow.addUserRequestListener(buttonProbe::setReceivedValue);
+        mainWindow.addUserRequestListener(itemProbe::setReceivedValue);
 
-        driver.startBiddingFor("an item id", Integer.MAX_VALUE);
-        driver.check(buttonProbe);
+        driver.startBiddingFor("an item id", 789);
+        driver.check(itemProbe);
     }
 }

@@ -2,6 +2,7 @@ package io.benjamintan.goos.xmpp;
 
 import io.benjamintan.goos.Auction;
 import io.benjamintan.goos.AuctionHouse;
+import io.benjamintan.goos.Item;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -21,8 +22,8 @@ public class XMPPAuctionHouse implements AuctionHouse {
     }
 
     @Override
-    public Auction auctionFor(String itemId) {
-        return new XMPPAuction(connection, auctionId(itemId, connection));
+    public Auction auctionFor(Item item) {
+        return new XMPPAuction(connection, auctionId(item.identifier, connection));
     }
 
     @Override

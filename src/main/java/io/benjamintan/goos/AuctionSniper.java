@@ -3,14 +3,14 @@ package io.benjamintan.goos;
 
 public class AuctionSniper implements AuctionEventListener {
     private final Auction auction;
-    private String itemId;
+    private Item item;
     private SniperSnapshot snapshot;
     private final Announcer<SniperListener> announcer = Announcer.to(SniperListener.class);
 
-    public AuctionSniper(Auction auction, String itemId) {
+    public AuctionSniper(Auction auction, Item item) {
         this.auction = auction;
-        this.itemId = itemId;
-        this.snapshot = SniperSnapshot.joining(itemId);
+        this.item = item;
+        this.snapshot = SniperSnapshot.joining(item.identifier);
     }
 
     @Override
@@ -28,8 +28,12 @@ public class AuctionSniper implements AuctionEventListener {
 
             case FromOtherBidder:
                 final int bid = price + increment;
-                auction.bid(bid);
-                snapshot = snapshot.bidding(price, bid);
+                if (item.allowsBid(bid)) {
+                    auction.bid(bid);
+                    snapshot = snapshot.bidding(price, bid);
+                } else {
+                    snapshot = snapshot.losing(price);
+                }
                 break;
         }
 

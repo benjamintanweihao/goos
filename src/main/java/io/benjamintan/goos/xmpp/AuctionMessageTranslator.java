@@ -22,6 +22,14 @@ public class AuctionMessageTranslator implements MessageListener {
 
     @Override
     public void processMessage(Chat unusedChat, Message message) {
+        try {
+            translate(message);
+        } catch (Exception parseException) {
+            listener.auctionFailed();
+        }
+    }
+
+    private void translate(Message message) throws MissingValueException {
         AuctionEvent event = AuctionEvent.from(message.getBody());
 
         String type = event.type();
@@ -35,15 +43,15 @@ public class AuctionMessageTranslator implements MessageListener {
     private static class AuctionEvent {
         private final Map<String, String> fields = new HashMap<>();
 
-        public String type() {
+        public String type() throws MissingValueException {
             return get("Event");
         }
 
-        public int increment() {
+        public int increment() throws MissingValueException {
             return getInt("Increment");
         }
 
-        public int currentPrice() {
+        public int currentPrice() throws MissingValueException {
             return getInt("CurrentPrice");
         }
 
@@ -66,19 +74,24 @@ public class AuctionMessageTranslator implements MessageListener {
             return messageBody.split(";");
         }
 
-        public PriceSource isFrom(String sniperId) {
+        public PriceSource isFrom(String sniperId) throws MissingValueException {
             return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
         }
 
-        private String get(String fieldName) {
-            return fields.get(fieldName);
+        private String get(String fieldName) throws MissingValueException {
+            String value = fields.get(fieldName);
+            if (value == null) {
+                throw new MissingValueException(fieldName);
+            } else {
+                return value;
+            }
         }
 
-        private int getInt(String fieldName) {
+        private int getInt(String fieldName) throws MissingValueException {
             return Integer.parseInt(get(fieldName));
         }
 
-        private String bidder() {
+        private String bidder() throws MissingValueException {
             return get("Bidder");
         }
     }

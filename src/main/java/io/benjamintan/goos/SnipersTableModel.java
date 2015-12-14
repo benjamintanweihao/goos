@@ -15,9 +15,10 @@ public class SnipersTableModel extends AbstractTableModel
     public static final String STATUS_WINNING = "winning";
     public static final String STATUS_LOSING = "winning";
     public static final String STATUS_WON = "won";
+    public static final String STATUS_FAILED = "failed";
 
     private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING,
-            STATUS_WINNING, STATUS_LOSING, STATUS_LOST, STATUS_WON};
+            STATUS_WINNING, STATUS_LOSING, STATUS_LOST, STATUS_WON, STATUS_FAILED};
 
     @Override
     public String getColumnName(int columnIndex) {

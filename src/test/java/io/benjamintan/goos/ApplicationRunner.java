@@ -59,6 +59,10 @@ public class ApplicationRunner {
         driver.showSniperStatus(auction.getItemId(), lastPrice, lastPrice, SnipersTableModel.STATUS_WON);
     }
 
+    public void showsSniperHasFailed(FakeAuctionServer auction) {
+        driver.showSniperStatus(auction.getItemId(), SnipersTableModel.STATUS_FAILED);
+    }
+
     public void hasShownSniperIsWinning(FakeAuctionServer auction, int winningBid) {
         driver.showSniperStatus(auction.getItemId(), winningBid, winningBid, SnipersTableModel.STATUS_WINNING);
     }
@@ -76,5 +80,4 @@ public class ApplicationRunner {
             driver.dispose();
         }
     }
-
 }

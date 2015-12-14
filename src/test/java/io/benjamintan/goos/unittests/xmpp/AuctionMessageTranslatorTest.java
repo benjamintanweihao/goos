@@ -47,4 +47,24 @@ public class AuctionMessageTranslatorTest {
 
         verify(listener, times(1)).currentPrice(234, 5, PriceSource.FromSniper);
     }
+
+    @Test
+    public void notifiesAuctionFailedWhenBadMessageReceived() {
+        Message message = new Message();
+        message.setBody("a bad message");
+
+        translator.processMessage(UNUSED_CHAT, message);
+
+        verify(listener, times(1)).auctionFailed();
+    }
+
+    @Test
+    public void notifiesAuctionFailedWhenEventTypeMissing() {
+        Message message = new Message();
+        message.setBody("SOLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + ApplicationRunner.SNIPER_ID + ";");
+
+        translator.processMessage(UNUSED_CHAT, message);
+
+        verify(listener, times(1)).auctionFailed();
+    }
 }

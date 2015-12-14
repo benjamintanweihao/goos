@@ -51,6 +51,10 @@ public class FakeAuctionServer {
         currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
     }
 
+    public void sendInvalidMessageContaining(String brokenMessage) throws XMPPException {
+        currentChat.sendMessage(brokenMessage);
+    }
+
     public void stop() {
         connection.disconnect();
     }
@@ -66,6 +70,12 @@ public class FakeAuctionServer {
                         price, increment, bidder)
         );
     }
+
+    public void reportsInvalidMessage(FakeAuctionServer auction, String brokenMessage) {
+        // TOOD
+    }
+
+
 
     public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
         receivesAMessageMatching(sniperId, equalTo(XMPPAuction.JOIN_COMMAND_FORMAT));

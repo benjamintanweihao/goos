@@ -74,4 +74,13 @@ public class AuctionSniperTest {
                 new SniperSnapshot(ITEM_ID, 123, 123, SniperState.WON));
     }
 
+    @Test
+    public void reportsFailedIfAuctionFailsWhenBidding() {
+        sniper.currentPrice(123, 45, FromOtherBidder);
+        sniper.auctionFailed();
+
+        verify(sniperListener).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED));
+    }
+
 }

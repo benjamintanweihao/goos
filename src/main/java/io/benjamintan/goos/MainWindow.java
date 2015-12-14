@@ -2,14 +2,16 @@ package io.benjamintan.goos;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class MainWindow extends JFrame {
     private static final String SNIPERS_TABLE_NAME = "Snipers";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String APPLICATION_NAME = "Auction Sniper";
-    public static String NEW_ITEM_ID_NAME = "item id";
-    public static String JOIN_BUTTON_NAME = "Join Auction";
+    public static final String NEW_ITEM_STOP_PRICE_NAME = "stop price";
+    public static final String NEW_ITEM_ID_NAME = "item id";
+    public static final String JOIN_BUTTON_NAME = "Join Auction";
 
     ArrayList<UserRequestListener> userRequests = new ArrayList<>();
 
@@ -27,7 +29,13 @@ public class MainWindow extends JFrame {
         final JTextField itemIdField = new JTextField();
         itemIdField.setColumns(25);
         itemIdField.setName(NEW_ITEM_ID_NAME);
+
+        final JFormattedTextField stopPriceField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        stopPriceField.setColumns(7);
+        stopPriceField.setName(NEW_ITEM_STOP_PRICE_NAME);
+
         controls.add(itemIdField);
+        controls.add(stopPriceField);
 
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);

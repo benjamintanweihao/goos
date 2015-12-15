@@ -13,24 +13,29 @@ import static io.benjamintan.goos.AuctionEventListener.PriceSource.*;
 
 public class AuctionMessageTranslator implements MessageListener {
     private AuctionEventListener listener;
+    private XMPPFailureReporter failureReporter;
     private final String sniperId;
 
-    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener, XMPPFailureReporter failureReporter) {
         this.sniperId = sniperId;
         this.listener = listener;
+        this.failureReporter = failureReporter;
     }
 
     @Override
     public void processMessage(Chat unusedChat, Message message) {
+        String messageBody = message.getBody();
+
         try {
-            translate(message);
+            translate(messageBody);
         } catch (Exception parseException) {
+        failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
             listener.auctionFailed();
         }
     }
 
-    private void translate(Message message) throws MissingValueException {
-        AuctionEvent event = AuctionEvent.from(message.getBody());
+    private void translate(String messageBody) throws MissingValueException {
+        AuctionEvent event = AuctionEvent.from(messageBody);
 
         String type = event.type();
         if ("CLOSE".equals(type)) {

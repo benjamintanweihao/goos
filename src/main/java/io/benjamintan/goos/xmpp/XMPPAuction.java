@@ -29,7 +29,7 @@ public class XMPPAuction implements Auction {
 
     private AuctionMessageTranslator translatorFor(XMPPConnection connection) {
         return new AuctionMessageTranslator(connection.getUser(),
-                auctionEventListeners.announce());
+                auctionEventListeners.announce(), null);
     }
 
     private AuctionEventListener chatDisconnectorFor(AuctionMessageTranslator translator) {

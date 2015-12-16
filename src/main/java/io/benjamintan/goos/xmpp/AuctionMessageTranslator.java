@@ -29,7 +29,7 @@ public class AuctionMessageTranslator implements MessageListener {
         try {
             translate(messageBody);
         } catch (Exception parseException) {
-        failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
+            failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
             listener.auctionFailed();
         }
     }

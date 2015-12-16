@@ -3,5 +3,6 @@
 .idea/
 /out/
 *.log
+*.log.*
 build
 .gradle

@@ -4,4 +4,10 @@
 
 Yet another attempt at Growing Object-Oriented Software, Guided by Tests.
 
-I'll finish it this time, really.
+I've divided the chapters up into branches.
+
+* Java 8
+* JUnit
+* Mockito
+* Power Mockito
+
